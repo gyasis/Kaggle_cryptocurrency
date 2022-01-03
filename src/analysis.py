@@ -32,10 +32,10 @@ def create_time_series_plot(dataframe):
         dataframe.plot()
         plt.show()
 # %%
-timeseries_plot(tree)
+create_time_series_plot(tree)
 # %%
 import seaborn as sns
-sns.set_styple('whitegrid')
+sns.set_style('whitegrid')
 
 # %%
 tree[0].head(1000).plot(legend=True, figsize=(12,5))
@@ -62,4 +62,30 @@ def create_spaghetti_plot(dataframe):
 import seaborn as sns
 # %%
 sns.lineplot(x=supplemental_df.timestamp, y=supplemental_df.Open, hue=supplemental_df.Asset_ID)
+# %%
+
+tree.head()
+# %%
+supplemental_df.head()
+# %%
+from sklearn import preprocessing
+mix_max_scaler = preprocessing.MinMaxScaler()
+
+# mix/max normalization of specific columns of dataframe
+
+def targeted_minmax_scaler(dataframe, columns):
+    scaler = preprocessing.MinMaxScaler()
+    scaler.fit(dataframe[columns])
+    dataframe[columns] = scaler.transform(dataframe[columns])
+    return dataframe
+
+
+x = targeted_minmax_scaler(supplemental_df, ['Open', 'High', 'Low', 'Close', 'Volume'])
+
+# %%
+x.head()
+# %%
+tree = x 
+# %%
+sns.lineplot(x=(tree.timestamp), y=tree.Open, hue=tree.Asset_ID, data=tree[(tree.Asset_ID != 1)])
 # %%
